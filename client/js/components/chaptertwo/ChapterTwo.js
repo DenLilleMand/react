@@ -1,24 +1,31 @@
 import React from "react";
-import Marty from "marty";
 //Components imported for examples:
 import ExampleDynamicValues from "./ExampleDynamicValues";
 import ChildrenProp from "./ChildrenProp";
 import DynamicValuesForClassName from "./DynamicValuesForClassName";
 import ConditionalExample from "./ConditionalExample";
-import InputComponent from "./InputComponent";
 import NoJSX from "./NoJSX";
+import CorrectInputComponent from './refexamples/CorrectInputComponent';
+import ImmediateChildRef from './refexamples/ImmediateChildRef';
+import DangerouslySetInnerHTMLComponent from './DangerouslySetHTMLComponent';
 
 export default class ChapterTwo extends React.Component {
 	constructor(props) {
 	  super(props);
 	  console.log('this is the function:' + this.clearAndFocusInput);
 	  this.clearAndFocusInput = this.clearAndFocusInput.bind(this);
+	  this.printReferences = this.printReferences.bind(this);
 	  this.state = {
+	    //variable used in example to show how we can render our own state.
 	    okay: "hmm... did that data just come from me?",
 	    /* variable used for the 'ref' example */
 	    userInput:''
 
 	  };
+	}
+	printReferences() {
+	  console.log(this.refs);
+	  console.log(this.refs.myInput);
 	}
 	/* methods used for the 'ref' example */
 	handleChange(e) {
@@ -33,6 +40,10 @@ export default class ChapterTwo extends React.Component {
 	/*ref example#end */
 
 	render() {
+	  var styles = {
+	  	backgroundColor: "red",
+		fontSize: "200%"
+	  }
 	  return (
 	  	<div className="centered">
 			<h1> Chapter 2: A JSX Introduction  </h1>
@@ -257,24 +268,111 @@ export default class ChapterTwo extends React.Component {
 				</p>
 				<h4> Ref </h4>
 				<p>
-					'ref' is used for components higher up in the hierarchy to call methods on their child 
-					  components, the example we're going use to demonstrate this will be a parent(this) component,
-					calling a method on a child component, in this case  ./client/js/components/chaptertwo/Input.js.
-
+					'ref' is used for components higher up in the hierarchy to call methods on their children,
+					  the following example simply shows how to access the refs a component has, 
+					so we have a input field with a set ref, and the button below prints all of the refs inside 
+					of the ChapterTwo component, so basically we will get a object containing all of the refs. 
+					  We haven't looked at onClick methods etc. yet, all you have to do looking at this code, 
+					is scroll up and look under the constructor of the ChapterTwo component, and find the method called 
+					'printReferences' and it prints the object containing all of the refs, and then  'myInput' ref specifically.
+					to see the output click 'f12' and go to the 'console' tab. (i have added in the component immediateChildRef,
+					that has nested 'ref' inside of it, just to experiment with how many refs  this.ref would print, but aparently we
+					only have access to the 'ref' of the components immediate children(the children it renders it self))
 					  <p> Example: </p>
 					<p> 
-						<button className="myButton" value="Click" onClick={this.clearAndFocusInput} />
-						<InputComponent  />
+						<input ref="myInput" type="text" />
+						<ImmediateChildRef />	
+						<div className="btn btn-primary" onClick={this.printReferences}> print this components references  </div>
 					</p>
+
+					<p> 
+						The following example will be more complex, and is taken from facebooks official examples, what we will show is a 
+						anti-pattern, which is basically a implementation that wont work, this example will be W/O 'ref'. 
+						And then the right way to do it, with 'ref'  which should clarify why 'ref' is needed.
+
+						The usecase is that we have a InputComponent, this component renders a 
+						input field and a clickable div, whenever we write something in this field the internal props are being automatically 
+						updated via the onChange method, but whenever someone clicks our div, we would like the input fields text to reset
+						and the field to 'focus', and to set a field 'focused' we would have to have a reference to the Node so the initial 
+						example('./client/js/components/chaptertwo/refexamples/WrongInputComponent'), unfortunately this implementation is so wrong 
+						that it doesn't even render. The following example: './client/js/components/chaptertwo/refexamples/CorrectInputComponent does 
+						render and work fine though:
+					</p>
+						<p>
+							<CorrectInputComponent />
+						</p>
+						<p>
+						The thing we have to notice, is the focus() call on the domNode whenever we click the clickable div, The WrongInputComponent 
+						tried to get access to the domNode by saving the domNode in a variable before rendering it, to access it for later use,
+						  the problem with that is that  a render() method only returns a snapshot of the DOM in that particular moment in time, 
+						  so saving a DOMNode in a variable will be undefined by the time we get to it. This tutorial was found at: 
+						    <a href="https://facebook.github.io/react/docs/more-about-refs.html">
+						  	Here!
+						    </a>
+						    Our solution differs in the usage of es6 and the way we access the domNode, they have a fancy line of code aswell, 
+						    that declares 'ref' with a callback function, im not entirely sure what thats about, but it looks pretty fancy.
+						</p>
 				</p>
 				<h4> DangerouslySetInnerHTML </h4>
 				<p>
-					
-
-
+					This ref allows us to manipulate the DOM  via Strings, 
+					they say its if you work with third party libraries that 
+					manipulate it via String, doing it through React would allow interoperability 
+				        with this libraries. They surgest that we dont use it in text and by name, so i dont 
+				        think we need to spent more time on that attribut. 
+					This is an example useing it though('./client/js/components/chaptertwo/DangerouslySetInnerHTMLComponent'):
+					result:
+					<p>
+						<DangerouslySetInnerHTMLComponent />
+				      </p>
+				      <p>
+				      		few things worth mentioning is that the tag having the attribute must not have any children(text, other tags etc.)
+						and the string must be wrapped in a object and be put inside of that variable __html. And ive noticed that 
+						my page just doesn't show up in its entirety if one of these things goes wrong, so JSX is definetely not as forgiving 
+						as html.
+				      </p>
 				</p>
-
 			</p>
+			<h3> Events </h3>
+			<p> 
+				In JSX these are camelcased, so change becomes onChange(), click becomes onClick() etc.
+				thats because not all events are the same in all browsers, so this way its normalized accross all of them.
+				if you want to see how to bind a method to a component you can look at the CorrectInputComponent we had 
+				above, events indepth will be covered in chapter 5. 
+			</p>
+			<h3> Comments </h3>
+			<p>
+				In JSX these can be added in two ways, either by doing it in-inline with a tag like this:
+				<div /* */ className="herpderp"> this is a div with inline commenting </div>
+				or as a child of the component inside angel brackets:
+				Has to look in the code to see this obviously. the code is in the comments section of the ChaperTwo component.
+				{/* This is a comment as a child */}
+			</p>
+			<h3> Special Attributes </h3>
+			<p>
+				Because JSX transforms to pure javascript, there is a few keywords that are off-limit, such as 
+				'for' and 'class'.
+				  There is a html attribute called 'for' though, so to use this its changed to 'htmlFor',
+				and this is allso why the 'class' attribute has been changed to 'className'. and then we have 
+				the inline styles, to show how to do this, ive made a object right above this components render method, 
+				that contains some styles we're going to apply this div:
+				<p>
+				<div style={styles}> inline styles are bad? </div>
+				</p>
+				And notice how the css names are all camelCase, comma seperated and values are inside strings.
+				And just remember, in-line styles are as common in the react world as any other place,
+				so you probably wont have to deal too much with it. Dispite some argue that a react components encapsulation 
+				is enhanced by doing the CSS inside every component, but since every component usually is affected by its surroundings,
+				it will be hard to keep track of the exact CSS being applied, and besides that - even though a component is reusable maybe the 
+				style wont be relevant in all cases.
+			</p>
+			<h3> At the end </h3>
+			<p>
+				JSX is just transpiled into regular javascript and hence, as said earlier, is not required when writeing React.
+				There is several tips and tricks to make pure javascript easier to pull off, 
+				but we wont get into them here. Should seek out the official docs if interested.
+			</p>
+				
 		</div>
 	  );
 	}

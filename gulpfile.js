@@ -7,11 +7,14 @@ var sourcemaps = require('gulp-sourcemaps');
 var runSequence = require('run-sequence');
 var del = require('del');
 var babelify = require('babelify');
+var concat = require('gulp-concat');
 
 
 gulp.task('browserify', function(){
-  browserify('./client/js/Application.js')
-  .transform('babelify')
+  browserify('./client/js/index.js')
+  .transform(babelify.configure({
+    stage:0
+  }))
   .bundle()
   .pipe(source('bundle.js'))
   .pipe(gulp.dest('./build/js/'));
@@ -31,18 +34,19 @@ gulp.task('watch', function(){
 
 });
 
-gulp.task('copy', function() {
+gulp.task('copy-css', function() {
 	return gulp.src('./client/css/**/*.css')
 	.pipe(gulp.dest('./build/css'));
 });
-
-
-gulp.task('vendor', function(){
-
+gulp.task('assets', function() {
+	return gulp.src('./client/assets/**/*.*')
+	.pipe(gulp.dest('./build/assets'));
 });
 
+
+
 gulp.task('default',['clean'] ,function(callback) {
-  runSequence(['browserify', 'less','copy', 'vendor', 'watch'], callback);
+  runSequence(['browserify', 'less','copy-css','assets', 'watch'], callback);
 });
 
 

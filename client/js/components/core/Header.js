@@ -1,5 +1,5 @@
-import React from "react";
-import Marty from "marty";
+import React from 'react';
+import { Link } from 'react-router';
 
 export default class Header extends React.Component {
   constructor(props) {
@@ -29,9 +29,9 @@ export default class Header extends React.Component {
 
       <div className="header-limiter">
       <nav>
-      <a href="/chapters/chapterone"><i className="fa fa-file-text"></i> Chapter 1:Intro</a>
-      <a href="/chapters/chaptertwo"><i className="fa fa-file-text"></i> Chapter 2:JSX</a>
-      <a href="/chapters/chapterthree"><i className="fa fa-file-text"></i> Chapter 3:Component Lifecycle</a>
+      <Link to="/chapters/chapterone"><i className="fa fa-file-text"></i> Chapter 1:Intro</Link>
+      <Link to="/chapters/chaptertwo"><i className="fa fa-file-text"></i> Chapter 2:JSX</Link>
+      <Link to="/chapters/chapterthree"><i className="fa fa-file-text"></i> Chapter 3:Component Lifecycle</Link>
       <a href="/chapters/chapterfour"><i className="fa fa-file-text"></i> Chapter 4:Data Flow</a>
       <a href="/chapters/chapterfive"><i className="fa fa-file-text"></i> Chapter 5:Event Handling</a>
       <a href="/chapters/chaptersix"><i className="fa fa-file-text"></i> Chapter 6:Composing Components</a>
@@ -65,6 +65,19 @@ export default class Header extends React.Component {
       <a href="/chapters/chapterfifteen"><i className="fa fa-file-text"></i> Chapter 15: Testing With Jest</a>
       <a href="/chapters/chaptersixteen"><i className="fa fa-file-text"></i> Chapter 16: Architectural Patterns</a>
       <a href="/chapters/chapterseventeen"><i className="fa fa-file-text"></i> Chapter 17: Other uses</a>
+      </nav>
+
+      </div>
+      </div>
+
+      <div className="header-second-bar">
+
+      <div className="header-limiter">
+      <nav>
+      <Link to="/chapters/chapternineteen"><i className="fa fa-file-text"></i> Chapter 19: Flux </Link>
+      <Link to="/chapters/chaptertwenty"><i className="fa fa-file-text"></i> Chapter 20: The Flux implementation:Redux </Link>
+      <Link to="/chapters/chaptertwentyone"><i className="fa fa-file-text"></i> Chapter 21: Another todo app with Redux  </Link>
+      <Link to="/chapters/chaptertwentythree"><i className="fa fa-file-text"></i> Chapter 23: Data fetching with Redux </Link>
       </nav>
 
       </div>

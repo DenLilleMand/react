@@ -10,7 +10,7 @@ export default class ChapterOne extends React.Component {
 
   render() {
     return (
-      <div className="centered">
+      <div className="centered content">
       <h1> Chapter 1: A React Introduction </h1>
       <p>
       If you look in ./client/js/chapterone/ChapterOne.js you 

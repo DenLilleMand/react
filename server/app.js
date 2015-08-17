@@ -53,19 +53,6 @@ app.set('views', path.join(__dirname, './views'));
  app.get('*', function(req,res){
    res.render('index');
  });
- 
-/*
- *This would be if we would do SSR:
- */
-/*
- *app.use(require('marty-express')({
- *        marty:require('marty'),
- *        application:Application,
- *        routes:Routes,
- *        state:'state',
- *        body:'body'
- *}));
- */
 
 
 // catch 404 and forward to error handler
