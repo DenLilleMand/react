@@ -60,7 +60,7 @@ import herp from 'jquery-ui';
     });
   }
 
-  /* life time: */
+  /* life time(i guess render is a lifecycle method aswell): */
   componentWillReceiveProps(nextProps) {
     console.log('componentWillReceiveProps');
     this.setState({
